@@ -272,6 +272,7 @@ fun wireTransfer(
     val timeStamp = getUTCnow().toInstant().toEpochMilli()
     val transactionRef = getRandomString(8)
     transaction {
+        if (balanceForAccount(debitAccount) - checkAmount < BigDecimal.ZERO && debitAccount.owner != "bank") throw badRequest("Account would exceed debt limit.")
         BankAccountTransactionEntity.new {
             creditorIban = creditAccount.iban
             creditorBic = creditAccount.bic
